@@ -12,9 +12,12 @@ public class Collector : MonoBehaviour {
 		}		
 	}
 	void OnTriggerEnter2D(Collider2D col){
+		Debug.Log("Shape Caught");
 		Shape shapeScript = col.gameObject.GetComponent<Shape>();
+		Debug.Log("C: " + shapeScript.color + ", S: " + shapeScript.shape);
 		shapeScript.SetState("idle");
 		GameController.instance.HandleShapeEffect(shapeScript.color, shapeScript.shape);
+		Debug.LogWarning("------------------------------");
     }
 
 	public void SetTargetLane(int lane){

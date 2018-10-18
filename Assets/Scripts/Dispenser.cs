@@ -7,8 +7,8 @@ public class Dispenser : MonoBehaviour {
 	private int targetLane = 2;
 	private float dispenseRate = 2f;
 
-	private float dispenseDelayTimer = 1f;
-	private float dispenseDelayDuration = 1f;
+	private float dispenseDelayTimer = 0;
+	private float dispenseDelayDuration = 0.5f;
 	private float timeSinceLastDispensed;
 
 	private float yPos;
@@ -29,6 +29,7 @@ public class Dispenser : MonoBehaviour {
 	void Update () {
 
 		if(GameController.instance.state == "active"){
+
 			dispenseDelayTimer += Time.deltaTime;
 			if(dispenseDelayTimer >= dispenseDelayDuration){
 				LaneMovement.HandleUpdates(speed, targetLane, gameObject);
@@ -36,28 +37,39 @@ public class Dispenser : MonoBehaviour {
 
 			timeSinceLastDispensed += Time.deltaTime;
 			if(timeSinceLastDispensed >= dispenseRate){
-				DispenseShape();
-				timeSinceLastDispensed = 0;
-				targetLane = GetRandomLane();
+				StartCoroutine(DispenseShape());
 			}
+
+			
 		}
+	}
+
+	IEnumerator DispenseShape(){
+
+		animator.SetTrigger("Dispense Shape");
+		
+		timeSinceLastDispensed = 0;
+
+		yield return new WaitForSeconds(0.5f);		
+	
+		GameObject nextShape = GameController.instance.GetShapesPool().GetNextShape ();
+		Shape shapeScript = nextShape.GetComponent<Shape> ();
+		shapeScript.shapeHistoryLog.text += "\n shape dispensed";
+		shapeScript.SetColor (GetRandomColor ());
+		shapeScript.SetShape (GetRandomShape ());
+		shapeScript.SetLane (targetLane);
+		shapeScript.StartFalling ();
+
+		targetLane = GetRandomLane();
+		dispenseDelayTimer = 0;
+		
+		yield break;
 	}
 
 	public int GetTargetLane(){
 		return targetLane;
 	}
 
-	void DispenseShape () {
-		animator.SetTrigger("Dispense Shape");
-		dispenseDelayTimer = 0;
-		GameObject nextShape = GameController.instance.GetShapesPool().GetNextShape ();
-		Shape shapeScript = nextShape.GetComponent<Shape> ();
-		shapeScript.SetColor (GetRandomColor ());
-		shapeScript.SetShape (GetRandomShape ());
-		shapeScript.SetLane (targetLane);
-		shapeScript.StartFalling ();
-
-	}
 
 	private int GetRandomLane () {
 		int numberOfLanes = GameController.instance.numberOfLanes;

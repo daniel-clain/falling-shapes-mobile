@@ -23,7 +23,8 @@ public class GameController : MonoBehaviour {
 	public GameObject gameOverText;
 	private string[] colorNames = new string[] { "green", "red", "yellow", "blue" };
 
-	private string[] shapesList = new string[] { "circle", "triangle", "square", "star" };
+	//private string[] shapesList = new string[] { "circle", "triangle", "square", "star" };
+	private string[] shapesList = new string[] { "triangle", "star" };
 
 
 	private ShapesPool shapesPool;
@@ -97,25 +98,30 @@ public class GameController : MonoBehaviour {
 
 	public void HandleShapeEffect (string color, string shape) {
 		if (shape == "square") {
+			Debug.Log("square effect");
 			SquareColorEffect (color);
 		} else {
 			NonSquareColorEffect (color);
 		}
 
 		if (shape == "star") {
+			Debug.Log("star effect");
 			StarEffect ();
 
 		}
 		if (shape == "triangle") {
+			Debug.Log("triangle effect");
 			TriangleEffect();
 		}
 		if (shape == "circle") {
+			Debug.Log("circle effect");
 			CircleEffect();
 		}
 	}
 
 	void NonSquareColorEffect (string color) {
 		if (color == "blue") {
+			Debug.Log("blue effect");
 			timeRemaining += 10f;
 			timeText.text = "Time: " + (int) Math.Round (timeRemaining);
 			lives -= 1;
@@ -123,16 +129,19 @@ public class GameController : MonoBehaviour {
 		}
 
 		if (color == "yellow") {
+			Debug.Log("yellow effect");
 			score += 10;
 			scoreText.text = "Score: " + score;
 		}
 
 		if (color == "red") {
+			Debug.Log("red effect");
 			score -= 10;
 			scoreText.text = "Score: " + score;
 		}
 
-		if (color == "green") {			
+		if (color == "green") {	
+			Debug.Log("green effect");		
 			if(lives < 3){
 				lives += 1;
 				livesText.text = "Lives: " + lives;
@@ -142,6 +151,7 @@ public class GameController : MonoBehaviour {
 
 	void SquareColorEffect (string color) {
 		if (color == "blue") {
+			Debug.Log("blue square effect");
 			timeRemaining -= 10f;
 			timeText.text = "Time: " + (int) Math.Round (timeRemaining);
 			if(lives < 3){
@@ -151,16 +161,19 @@ public class GameController : MonoBehaviour {
 		}
 
 		if (color == "yellow") {
+			Debug.Log("yellow square effect");
 			score -= 10;
 			scoreText.text = "Score: " + score;
 		}
 
 		if (color == "red") {
+			Debug.Log("red square effect");
 			score += 10;
 			scoreText.text = "Score: " + score;
 		}
 
 		if (color == "green") {
+			Debug.Log("green square effect");
 			lives -= 1;
 			livesText.text = "Lives: " + lives;
 		}
@@ -184,6 +197,7 @@ public class GameController : MonoBehaviour {
 
 	void CircleEffect() {
 		List<GameObject> fallingShapes = shapesPool.GetFallingShapes ();
+		Debug.Log("Falling shapes: " + fallingShapes);
 		for (int i = 0; i < fallingShapes.Count; i++) {
 			Shape shapeScript = fallingShapes[i].GetComponent<Shape> ();
 			int indexOfCurrentColor = Array.IndexOf (colorNames, shapeScript.color);
