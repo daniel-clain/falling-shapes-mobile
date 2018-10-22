@@ -2,37 +2,64 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LaneMovement : MonoBehaviour {
-    
-	private static void MoveToTargetLane (float speed, int targetLane, GameObject gameObject) {
+public class LaneMovement {
 
-		float xVal = GameController.instance.laneXVals[targetLane - 1];
-		if (gameObject.transform.position.x > xVal + 0.05) {
-			gameObject.transform.Translate(Vector2.left * speed * Time.deltaTime);
-		} else if (gameObject.transform.position.x < xVal - 0.05) {
-			gameObject.transform.Translate(Vector2.right * speed * Time.deltaTime);
-		}
+	GameObject gameObj;
+	float speed;
+	float timeStartedMoving = 0f;
+
+	Vector2 start;
+	Vector2 end;
+
+	public LaneMovement(GameObject g, float s){
+		gameObj = g;
+		speed = s;
 	}
 
-	public static bool IsAtTargetLane(int targetLane, GameObject gameObject) {
-		float xVal = GameController.instance.laneXVals[targetLane - 1];
-		if (gameObject.transform.position.x < xVal + 0.05 &&
-			gameObject.transform.position.x > xVal - 0.05) {
-			return true;
-		}
-		return false;
+	public void StartMovingToTarget(int targetLane){
+		
+		float laneXVal = GameController.instance.laneXVals[targetLane - 1];		
+		float yVal = gameObj.transform.position.y;
+		timeStartedMoving = Time.time;
+		start = gameObj.transform.position;
+		end = new Vector2(laneXVal, yVal);
+
 	}
 
-    public static void HandleUpdates(float speed, int targetLane, GameObject gameObject){
-        if(gameObject.name == "Dispenser"){
-            Dispenser dispenser = gameObject.GetComponent<Dispenser>();
-            //Debug.Log("dispenser: " + dispenser.GetTargetLane() + " || passed lane: " + targetLane);
+	public void ContinueMovingToTarget(){
 
-        }
-        if(IsAtTargetLane(targetLane, gameObject) == false){
-            MoveToTargetLane(speed, targetLane, gameObject);
-        }
-    }
+		float timeSinceStarted = Time.time - timeStartedMoving;
+		float distance = end.x - start.x;
+		if(distance < 0){
+			distance = distance * (-1);
+		}
+		float duration = speed * distance;
+		float percentageComplete = timeSinceStarted / duration;
+		
+		gameObj.transform.position = Vector3.Lerp(start, end, percentageComplete);
+	}
+
+	public bool AlreadyAtTargetLane(){
+		return gameObj.transform.position.x == end.x;
+	}
+	
+	public void MoveToTargetLane(int targetLane){
+		float laneXVal = GameController.instance.laneXVals[targetLane - 1];		
+		float yVal = gameObj.transform.position.y;
+		Vector2 start = gameObj.transform.position;
+		Vector2 end = new Vector2(laneXVal, yVal);
+		float distance = end.x - start.x;
+		if(distance < 0){
+			distance = distance * (-1);
+		}
+		Debug.Log("Distance: " + distance);
+		float timeToMove = speed * distance;
+		float timeSinceStarted = Time.time - timeStartedMoving;
+		Debug.Log("timeSinceStarted: " + timeSinceStarted);
+		float percentageComplete = timeSinceStarted / 20f;
+		Debug.Log("percentageComplete: " + percentageComplete);
+		gameObj.transform.position = Vector3.Lerp(start, end, percentageComplete);
+	}
 
     
 }

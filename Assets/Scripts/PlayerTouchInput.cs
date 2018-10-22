@@ -14,12 +14,12 @@ public class PlayerTouchInput : MonoBehaviour {
 			if (touch.phase == TouchPhase.Began) {
 				if(touch.position.x < Screen.width/2){
 					Debug.Log("LEFT");
-					collector.SetTargetLane(1);
+					//collector.SetTargetLane(1);
 				}
 				
 				if(touch.position.x > Screen.width/2){
 					Debug.Log("RIGHT");
-					collector.SetTargetLane(3);
+					//collector.SetTargetLane(3);
 				}
 			}	
 		}

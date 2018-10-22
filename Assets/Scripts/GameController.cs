@@ -23,9 +23,7 @@ public class GameController : MonoBehaviour {
 	public GameObject gameOverText;
 	private string[] colorNames = new string[] { "green", "red", "yellow", "blue" };
 
-	//private string[] shapesList = new string[] { "circle", "triangle", "square", "star" };
-	private string[] shapesList = new string[] { "triangle", "star" };
-
+	private string[] shapesList = new string[] { "circle", "triangle", "square", "star" };
 
 	private ShapesPool shapesPool;
 
@@ -97,6 +95,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void HandleShapeEffect (string color, string shape) {
+
 		if (shape == "square") {
 			Debug.Log("square effect");
 			SquareColorEffect (color);
@@ -181,6 +180,7 @@ public class GameController : MonoBehaviour {
 
 	void StarEffect() {
 		List<GameObject> fallingShapes = shapesPool.GetFallingShapes ();
+
 		for (int i = 0; i < fallingShapes.Count; i++) {
 			Shape shapeScript = fallingShapes[i].GetComponent<Shape> ();
 			int indexOfCurrentShape = Array.IndexOf (shapesList, shapeScript.shape);
@@ -197,7 +197,6 @@ public class GameController : MonoBehaviour {
 
 	void CircleEffect() {
 		List<GameObject> fallingShapes = shapesPool.GetFallingShapes ();
-		Debug.Log("Falling shapes: " + fallingShapes);
 		for (int i = 0; i < fallingShapes.Count; i++) {
 			Shape shapeScript = fallingShapes[i].GetComponent<Shape> ();
 			int indexOfCurrentColor = Array.IndexOf (colorNames, shapeScript.color);
@@ -217,7 +216,7 @@ public class GameController : MonoBehaviour {
 		List<GameObject> fallingShapes = shapesPool.GetFallingShapes ();
 		for (int i = 0; i < fallingShapes.Count; i++) {
 			Shape shapeScript = fallingShapes[i].GetComponent<Shape> ();
-			int currentLane = shapeScript.lane;
+			int currentLane = shapeScript.targetLane;
 			int nextLane;
 			if (currentLane == 1 || currentLane == 3) {
 				nextLane = 2;
@@ -229,9 +228,7 @@ public class GameController : MonoBehaviour {
 					nextLane = 3;
 				}
 			}
-
-			shapeScript.SetLane(nextLane);
-		}
+			shapeScript.SetTargetLane(nextLane);		}
 	}
 
 	void CheckForGameOver () {

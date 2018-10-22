@@ -56,7 +56,6 @@
      <Compile Include="Assets\Scripts\Collector.cs" />
      <Compile Include="Assets\Scripts\Dispenser.cs" />
      <Compile Include="Assets\Scripts\GameController.cs" />
-     <Compile Include="Assets\Scripts\KeyboardInput.cs" />
      <Compile Include="Assets\Scripts\LaneMovement.cs" />
      <Compile Include="Assets\Scripts\PlayerTouchInput.cs" />
      <Compile Include="Assets\Scripts\Shape.cs" />
