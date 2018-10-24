@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Dispenser : MonoBehaviour {
 	private int targetLane = 2;
-	private float dispenseRate = 2.1f;
+	private float dispenseRate = 2.4f;
 	private float timeSinceLastDispensed = 0;
 	private float yPos;
 
@@ -34,7 +34,6 @@ public class Dispenser : MonoBehaviour {
 			}
 
 			timeSinceLastDispensed += Time.deltaTime;
-			Debug.Log("timeSinceLastDispensed" + timeSinceLastDispensed);
 			if(timeSinceLastDispensed >= dispenseRate){
 				StartCoroutine(DispenseShape());
 			}
@@ -44,7 +43,7 @@ public class Dispenser : MonoBehaviour {
 	IEnumerator DispenseShape(){
 
 		timeSinceLastDispensed = 0;
-		float timeToGetToLane = speed * 2.2f;
+		float timeToGetToLane = speed * 2.3f;
 		float timeToVomit = 0.5f;
 		
 
@@ -57,10 +56,9 @@ public class Dispenser : MonoBehaviour {
 		yield return new WaitForSeconds(timeToGetToLane);
 
 		animator.SetTrigger("Dispense Shape");
-		Debug.Log("Animate Dispense Shape");
 
 		yield return new WaitForSeconds(timeToVomit);	
-	
+
 		GameObject nextShape = GameController.instance.GetShapesPool().GetNextShape ();
 		Shape shapeScript = nextShape.GetComponent<Shape> ();
 		shapeScript.shapeHistoryLog.text += "\n shape dispensed";

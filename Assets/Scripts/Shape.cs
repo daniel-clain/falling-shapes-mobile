@@ -15,7 +15,7 @@ public class Shape : MonoBehaviour{
 
 	float speed = 0.4f;
 
-    float fallSpeed = -1.2f;
+    float fallSpeed = -1f;
     public int targetLane;    
     public string color;
     public string shape;

@@ -21,6 +21,19 @@ public class GameController : MonoBehaviour {
 	public TextMeshProUGUI livesText;
 	public TextMeshProUGUI lossReasonText;
 	public GameObject gameOverText;
+
+	
+	[SerializeField] AudioSource changeColorSound;	
+	[SerializeField] AudioSource changeShapeSound;	
+	[SerializeField] AudioSource gameOverSound;
+	[SerializeField] AudioSource moreTimeSound;
+	[SerializeField] AudioSource gainLifeSound;
+	[SerializeField] AudioSource gameStartSound;
+	[SerializeField] AudioSource slideSound;
+	[SerializeField] AudioSource badShapeSound;
+	[SerializeField] AudioSource scorePointsSound;
+
+
 	private string[] colorNames = new string[] { "green", "red", "yellow", "blue" };
 
 	private string[] shapesList = new string[] { "circle", "triangle", "square", "star" };
@@ -62,6 +75,8 @@ public class GameController : MonoBehaviour {
 		livesText.text = "Lives: " + lives;
 		scoreText.text = "Score: " + score;
 		timeText.text = "Time: " + timeRemaining;
+
+		gameStartSound.Play();
 
 		
 	}
@@ -122,6 +137,7 @@ public class GameController : MonoBehaviour {
 		if (color == "blue") {
 			Debug.Log("blue effect");
 			timeRemaining += 10f;
+			moreTimeSound.Play();
 			timeText.text = "Time: " + (int) Math.Round (timeRemaining);
 			lives -= 1;
 			livesText.text = "Lives: " + lives;
@@ -129,12 +145,14 @@ public class GameController : MonoBehaviour {
 
 		if (color == "yellow") {
 			Debug.Log("yellow effect");
+			scorePointsSound.Play();
 			score += 10;
 			scoreText.text = "Score: " + score;
 		}
 
 		if (color == "red") {
 			Debug.Log("red effect");
+			badShapeSound.Play();
 			score -= 10;
 			scoreText.text = "Score: " + score;
 		}
@@ -142,6 +160,7 @@ public class GameController : MonoBehaviour {
 		if (color == "green") {	
 			Debug.Log("green effect");		
 			if(lives < 3){
+				gainLifeSound.Play();
 				lives += 1;
 				livesText.text = "Lives: " + lives;
 			}
@@ -154,6 +173,7 @@ public class GameController : MonoBehaviour {
 			timeRemaining -= 10f;
 			timeText.text = "Time: " + (int) Math.Round (timeRemaining);
 			if(lives < 3){
+				gainLifeSound.Play();
 				lives += 1;
 				livesText.text = "Lives: " + lives;
 			}
@@ -161,24 +181,28 @@ public class GameController : MonoBehaviour {
 
 		if (color == "yellow") {
 			Debug.Log("yellow square effect");
+			badShapeSound.Play();
 			score -= 10;
 			scoreText.text = "Score: " + score;
 		}
 
 		if (color == "red") {
 			Debug.Log("red square effect");
+			scorePointsSound.Play();
 			score += 10;
 			scoreText.text = "Score: " + score;
 		}
 
 		if (color == "green") {
 			Debug.Log("green square effect");
+			badShapeSound.Play();
 			lives -= 1;
 			livesText.text = "Lives: " + lives;
 		}
 	}
 
 	void StarEffect() {
+		changeShapeSound.Play();
 		List<GameObject> fallingShapes = shapesPool.GetFallingShapes ();
 
 		for (int i = 0; i < fallingShapes.Count; i++) {
@@ -196,6 +220,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	void CircleEffect() {
+		changeColorSound.Play();
 		List<GameObject> fallingShapes = shapesPool.GetFallingShapes ();
 		for (int i = 0; i < fallingShapes.Count; i++) {
 			Shape shapeScript = fallingShapes[i].GetComponent<Shape> ();
@@ -213,6 +238,7 @@ public class GameController : MonoBehaviour {
 
 	
 	void TriangleEffect() {
+		slideSound.Play();
 		List<GameObject> fallingShapes = shapesPool.GetFallingShapes ();
 		for (int i = 0; i < fallingShapes.Count; i++) {
 			Shape shapeScript = fallingShapes[i].GetComponent<Shape> ();
@@ -235,6 +261,7 @@ public class GameController : MonoBehaviour {
 		string reason = lives <= 0 ? "out of lives" : "out of time";
 		if (lives <= 0 || timeRemaining <= 0) {
 			state = "gameover";
+			gameOverSound.Play();
 			lossReasonText.text = reason;
 			gameOverText.SetActive(true);
 		}

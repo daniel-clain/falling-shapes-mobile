@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Collector : MonoBehaviour {
 	private float speed = 0.3f;
+	[SerializeField] AudioSource moveSound;
+
 	private int targetLane = 2;
 	private LaneMovement laneMovement;
 
@@ -28,6 +30,7 @@ public class Collector : MonoBehaviour {
 			targetLane = 2;
 
 		if(targetLane != originalLane){
+			moveSound.Play();
 			laneMovement.StartMovingToTarget(targetLane);
 		}
 
@@ -37,19 +40,39 @@ public class Collector : MonoBehaviour {
 	}
 
 
-	bool DirectionIsHeldDown(string key){
-		if(key == null){
-			return !Input.GetKey("left") && !Input.GetKey("right");
-		} else if(key == "left"){
-			return Input.GetKey("left");
-		} else if(key == "right"){
-			return Input.GetKey("right");
+	bool DirectionIsHeldDown(string direction){
+		if(direction == null){
+			return (!KeyDown("left") && !KeyDown("right")) && (!ScreenTouch("left") && !ScreenTouch("right"));
 		} else {
-			Debug.LogError(key + " is not a valid key");
-			return false;
+			return KeyDown(direction) || ScreenTouch(direction);
 		}
 	}
+
+	bool KeyDown(string direction){
+		return Input.GetKey(direction);
+	}
+	bool ScreenTouch(string direction){
+		if(Input.touchCount > 0){
+			Touch touch = Input.GetTouch(0);
+			bool leftTouch = touch.position.x < Screen.width / 2;
+			bool rightTouch = touch.position.x > Screen.width / 2;
+
+			if(direction == "left" && leftTouch){
+				Debug.Log("touch left");
+				return true;
+			}
+			if(direction == "right" && rightTouch){
+				Debug.Log("touch right");
+				return true;					
+			}
+		}
+		return false;
+		
+	}
+
+	
 	void OnTriggerEnter2D(Collider2D col){
+		//catchSound.Play();
 		Shape shapeScript = col.gameObject.GetComponent<Shape>();
 		shapeScript.SetState("idle");
 		GameController.instance.HandleShapeEffect(shapeScript.color, shapeScript.shape);
